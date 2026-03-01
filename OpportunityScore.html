@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Loan Opportunity Score</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--bg:#ffffff;
+--text:#1a1a1a;
+--muted:#6b7280;
+--card:#ffffff;
+--border:#e5e7eb;
+
+--blue:#1e88e5;
+--blue-100:#eaf4ff;
+
+--red:#ef4444;
+--red-100:#ffecec;
+
+--green:#22c55e;
+
+--shadow:0 6px 22px rgba(0,0,0,.08);
+--radius:14px;
+
+--font:"Poppins",system-ui;
+}
+
+body{
+margin:0;
+padding:18px;
+background:#ffffff;
+font-family:var(--font);
+color:var(--text);
+}
+
+.widget{
+width:420px;
+max-width:100%;
+background:#fff;
+border-radius:var(--radius);
+box-shadow:var(--shadow);
+border:1px solid rgba(0,0,0,.05);
+overflow:hidden;
+}
+
+/* HEADER */
+
+.header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:14px;
+}
+
+.h-left{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.ring{
+width:42px;height:42px;
+border-radius:999px;
+display:grid;
+place-items:center;
+background:conic-gradient(var(--green) 0 234deg,#e5e7eb 234deg 360deg);
+position:relative;
+}
+
+.ring::after{
+content:"";
+width:34px;height:34px;
+border-radius:999px;
+background:#fff;
+position:absolute;
+inset:4px;
+}
+
+.ring span{
+  position: relative;
+  z-index: 2;
+  font-weight: 700;
+  font-size: 13px;
+  color: #111827;   /* ✅ ensures visibility */
+  line-height: 1;
+}
+
+.title{font-weight:700;font-size:14px;}
+.subtitle{font-size:12px;color:var(--muted);}
+
+.actions{display:flex;gap:8px;}
+
+.icon-btn{
+width:28px;height:28px;
+border-radius:8px;
+border:1px solid var(--border);
+background:#fff;
+display:grid;
+place-items:center;
+cursor:pointer;
+}
+
+/* SECTION */
+
+.section{padding:0 14px 14px;}
+
+.card{
+border-radius:14px;
+padding:12px;
+margin-top:10px;
+border:1px solid rgba(0,0,0,.04);
+}
+
+.card.blue{background:var(--blue-100);}
+.card.red{background:var(--red-100);}
+
+.card-head{
+display:flex;
+align-items:center;
+gap:10px;
+font-weight:700;
+font-size:13px;
+margin-bottom:10px;
+}
+
+.dot{
+width:10px;height:10px;border-radius:999px;
+background:var(--blue);
+}
+.dot.red{background:var(--red);}
+
+.item{
+display:flex;
+gap:10px;
+padding:7px 0;
+font-size:13px;
+}
+
+.star{width:18px;height:18px;}
+.star.blue path{fill:var(--blue);}
+.star.red path{fill:var(--red);}
+
+/* RECOMMENDATION */
+
+.recommend{
+background:#fff;
+border:1px solid var(--border);
+border-radius:14px;
+padding:12px;
+margin-top:12px;
+}
+
+.recommend h4{
+margin:0 0 10px;
+font-size:13px;
+font-weight:700;
+}
+
+.rec-row{
+display:flex;
+align-items:center;
+gap:10px;
+font-size:13px;
+}
+
+.rec-icon{
+width:22px;height:22px;
+border-radius:999px;
+background:#fce7f3;
+display:grid;
+place-items:center;
+}
+
+.pill{
+margin-top:10px;
+padding:8px 14px;
+background:#e11d48;
+color:#fff;
+border:none;
+border-radius:999px;
+font-weight:600;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="widget">
+
+<div class="header">
+<div class="h-left">
+<div class="ring"><span>65</span></div>
+<div>
+<div class="title">Opportunity Score</div>
+<div class="subtitle">Corporate Loan Opportunity</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+
+<!-- POSITIVE -->
+<div class="card blue">
+<div class="card-head">
+<span class="dot"></span>
+<span>Positive Factors</span>
+</div>
+
+<div class="item">
+<svg class="star blue" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.9 6.1 20.5l1.2-6.5-4.8-4.6 6.6-.9L12 2.5z"/></svg>
+<b>Customer Segment:</b> Commercial Banking
+</div>
+
+<div class="item">
+<svg class="star blue" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.9 6.1 20.5l1.2-6.5-4.8-4.6 6.6-.9L12 2.5z"/></svg>
+<b>Facility Type:</b> Working Capital / Term Financing
+</div>
+
+<div class="item">
+<svg class="star blue" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.9 6.1 20.5l1.2-6.5-4.8-4.6 6.6-.9L12 2.5z"/></svg>
+<b>Engagement Level:</b> High
+</div>
+
+<div class="item">
+<svg class="star blue" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.9 6.1 20.5l1.2-6.5-4.8-4.6 6.6-.9L12 2.5z"/></svg>
+<b>Estimated Revenue:</b> RM 40M – RM 60M
+</div>
+
+<div class="item">
+<svg class="star blue" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.9 6.1 20.5l1.2-6.5-4.8-4.6 6.6-.9L12 2.5z"/></svg>
+<b>Relationship Tenure:</b> Established Client
+</div>
+
+</div>
+
+<!-- NEGATIVE -->
+<div class="card red">
+<div class="card-head">
+<span class="dot red"></span>
+<span>Risk Indicators</span>
+</div>
+
+<div class="item">
+<svg class="star red" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.9 6.1 20.5l1.2-6.5-4.8-4.6 6.6-.9L12 2.5z"/></svg>
+<b>Credit Risk:</b> Moderate
+</div>
+
+<div class="item">
+<svg class="star red" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.9 6.1 20.5l1.2-6.5-4.8-4.6 6.6-.9L12 2.5z"/></svg>
+<b>Requested Facility:</b> RM 2M – RM 3M
+</div>
+
+</div>
+
+<!-- RECOMMENDATION -->
+<div class="recommend">
+<h4>Recommendation</h4>
+
+<div class="rec-row">
+<div class="rec-icon">⬆</div>
+<div>Opportunity Score indicates <b>Positive Lending Potential</b></div>
+</div>
+
+<button class="pill" onclick="alert('Demo Action')">Engage Client</button>
+
+</div>
+
+</div>
+</div>
+
+</body>
+</html>
