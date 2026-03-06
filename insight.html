@@ -4,171 +4,171 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Honda Finance – RM Insights</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background: #ffffff;
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 20px 12px;
-  }
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
 
-  .panel {
-    width: 320px;
-    background: #ffffff;
-    border-radius: 18px;
-    padding: 16px 14px;
-  }
+body{
+font-family:'Inter',sans-serif;
+background:#ffffff;
+display:flex;
+justify-content:center;
+padding:30px 20px;
+}
 
-  .panel-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #111111;
-    margin-bottom: 14px;
-  }
+.panel{
+width:380px;
+background:#fff;
+border-radius:18px;
+padding:20px;
+}
 
-  .insight-card {
-    background: #ffffff;
-    border: 1px solid #e3e3e3;
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 12px;
-  }
+/* Insight Title */
 
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
+.panel-title{
+font-size:20px;
+font-weight:700;
+color:#111;
+margin-bottom:18px;
+text-align:left;
+}
 
-  .card-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #111111;
-    line-height: 1.4;
-    flex: 1;
-  }
+/* Card */
 
-  .card-icon {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1px;
-  }
+.insight-card{
+background:#fff;
+border:1px solid #e4e4e4;
+border-radius:18px;
+padding:22px;
+margin-bottom:16px;
+}
 
-  .card-icon svg {
-    width: 16px;
-    height: 16px;
-    stroke: #b8b8b8;
-    fill: none;
-    stroke-width: 1.8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
+/* Header */
 
-  .card-body {
-    font-size: 13px;
-    color: #444444;
-    line-height: 1.65;
-    margin-bottom: 10px;
-  }
+.card-header{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+margin-bottom:10px;
+}
 
-  .card-body:last-of-type {
-    margin-bottom: 12px;
-  }
+.card-title{
+font-size:15px;
+font-weight:700;
+color:#111;
+line-height:1.4;
+flex:1;
+}
 
-  .card-body strong {
-    color: #111111;
-    font-weight: 700;
-  }
+.card-icon svg{
+width:16px;
+height:16px;
+stroke:#bbb;
+fill:none;
+stroke-width:2;
+}
 
-  .card-divider {
-    border: none;
-    border-top: 1px solid #eeeeee;
-    margin-bottom: 10px;
-  }
+/* Text */
 
-  .view-link {
-    font-size: 13px;
-    font-weight: 500;
-    color: #1565C0;
-    text-decoration: none;
-  }
+.card-body{
+font-size:14px;
+line-height:1.65;
+color:#444;
+margin-bottom:12px;
+}
 
-  .view-link:hover {
-    text-decoration: underline;
-  }
+.card-body strong{
+color:#111;
+font-weight:600;
+}
+
+/* Divider */
+
+.card-divider{
+border:none;
+border-top:1px solid #eee;
+margin-bottom:10px;
+}
+
+/* Link */
+
+.view-link{
+font-size:14px;
+font-weight:500;
+color:#1565C0;
+text-decoration:none;
+}
+
+.view-link:hover{
+text-decoration:underline;
+}
+
 </style>
 </head>
+
 <body>
 
 <div class="panel">
 
-  <div class="panel-title">Insight</div>
+<div class="panel-title">Insight</div>
 
-  <!-- Card 1 -->
-  <div class="insight-card">
-    <div class="card-header">
-      <div class="card-title">Boost EMI Renewal Conversions</div>
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24">
-          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-          <polyline points="16 7 22 7 22 13"></polyline>
-        </svg>
-      </div>
-    </div>
-    <div class="card-body">
-      You can increase EMI renewal rate by <strong>15%</strong> this quarter.
-    </div>
-    <div class="card-body">
-      You have <strong>14 dealers</strong> with contracts expiring in 30 days. Re-engage accounts like <strong>Sunrise Honda, Gurugram</strong> with revised rates before competitors approach.
-    </div>
-    <hr class="card-divider">
-    <a href="#" class="view-link">View Dealers</a>
-  </div>
+<!-- Card 1 -->
 
-  <!-- Card 2 -->
-  <div class="insight-card">
-    <div class="card-header">
-      <div class="card-title">Grow your Dealer Inventory Portfolio</div>
-    </div>
-    <div class="card-body">
-      You have grown dealer floor plan disbursals by <strong>₹8.7 Cr</strong>. Your peers have achieved an average growth of <strong>₹10.2 Cr</strong>.
-    </div>
-    <div class="card-body">
-      Identify dealers with rising unit sales like <strong>Metro Honda, Faridabad</strong> and offer higher inventory limits to close the gap.
-    </div>
-  </div>
+<div class="insight-card">
 
-  <!-- Card 3 -->
-  <div class="insight-card">
-    <div class="card-header">
-      <div class="card-title">Upsell Retail Loans on New Models</div>
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24">
-          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-          <polyline points="16 7 22 7 22 13"></polyline>
-        </svg>
-      </div>
-    </div>
-    <div class="card-body">
-      <strong>Honda City & Elevate</strong> launches this quarter are driving footfall. Personalise retail loan offers based on customer profiles to lift conversion by <strong>20%</strong>.
-    </div>
-    <hr class="card-divider">
-    <a href="#" class="view-link">View Leads</a>
-  </div>
+<div class="card-header">
+
+<div class="card-title">
+Boost EMI Renewal Conversions
+</div>
+
+<div class="card-icon">
+<svg viewBox="0 0 24 24">
+<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+<polyline points="16 7 22 7 22 13"/>
+</svg>
+</div>
+
+</div>
+
+<div class="card-body">
+You can increase EMI renewal rate by <strong>15%</strong> this quarter.
+</div>
+
+<div class="card-body">
+You have <strong>14 dealers</strong> with contracts expiring in 30 days. Re-engage accounts like <strong>Sunrise Honda, Gurugram</strong> with revised rates before competitors approach.
+</div>
+
+<hr class="card-divider">
+
+<a href="#" class="view-link">View Dealers</a>
+
+</div>
+
+<!-- Card 2 -->
+
+<div class="insight-card">
+
+<div class="card-title">
+Grow your Dealer Inventory Portfolio
+</div>
+
+<div class="card-body">
+You have grown dealer floor plan disbursals by <strong>₹8.7 Cr</strong>. Your peers have achieved an average growth of <strong>₹10.2 Cr</strong>.
+</div>
+
+<div class="card-body">
+Identify dealers with rising unit sales like <strong>Metro Honda, Faridabad</strong> and offer higher inventory limits.
+</div>
+
+</div>
 
 </div>
 
