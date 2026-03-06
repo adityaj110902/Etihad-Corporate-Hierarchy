@@ -6,7 +6,11 @@
 <title>Honda Finance – RM Insights</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
   body {
     font-family: 'Inter', sans-serif;
@@ -15,72 +19,85 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 24px 16px;
+    padding: 20px 12px;
   }
 
   .panel {
     width: 320px;
     background: #ffffff;
     border-radius: 18px;
-    padding: 20px 16px;
+    padding: 16px 14px;
   }
 
   .panel-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    color: #111;
+    color: #111111;
     margin-bottom: 14px;
   }
 
   .insight-card {
     background: #ffffff;
-    border-radius: 14px;
-    padding: 18px 16px 14px 16px;
+    border: 1px solid #e3e3e3;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
     margin-bottom: 10px;
-    position: relative;
-    border: 1px solid #e0e0e0;
   }
 
   .card-title {
     font-size: 14px;
     font-weight: 700;
-    color: #111;
-    margin-bottom: 8px;
-    line-height: 1.35;
-  }
-
-  .card-body {
-    font-size: 13px;
-    color: #444;
-    line-height: 1.6;
-    margin-bottom: 10px;
-  }
-
-  .card-body strong {
-    color: #111;
-    font-weight: 600;
+    color: #111111;
+    line-height: 1.4;
+    flex: 1;
   }
 
   .card-icon {
-    position: absolute;
-    top: 16px;
-    right: 14px;
-    color: #bbb;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
   }
 
   .card-icon svg {
-    width: 18px; height: 18px;
-    stroke: #bbb;
+    width: 16px;
+    height: 16px;
+    stroke: #b8b8b8;
     fill: none;
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
+  .card-body {
+    font-size: 13px;
+    color: #444444;
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  .card-body:last-of-type {
+    margin-bottom: 12px;
+  }
+
+  .card-body strong {
+    color: #111111;
+    font-weight: 700;
+  }
+
   .card-divider {
     border: none;
-    border-top: 1px solid #f0f0f0;
-    margin: 0 0 10px 0;
+    border-top: 1px solid #eeeeee;
+    margin-bottom: 10px;
   }
 
   .view-link {
@@ -103,10 +120,15 @@
 
   <!-- Card 1 -->
   <div class="insight-card">
-    <div class="card-icon">
-      <svg viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+    <div class="card-header">
+      <div class="card-title">Boost EMI Renewal Conversions</div>
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+          <polyline points="16 7 22 7 22 13"></polyline>
+        </svg>
+      </div>
     </div>
-    <div class="card-title">Boost EMI Renewal Conversions</div>
     <div class="card-body">
       You can increase EMI renewal rate by <strong>15%</strong> this quarter.
     </div>
@@ -119,7 +141,9 @@
 
   <!-- Card 2 -->
   <div class="insight-card">
-    <div class="card-title">Grow your Dealer Inventory Portfolio</div>
+    <div class="card-header">
+      <div class="card-title">Grow your Dealer Inventory Portfolio</div>
+    </div>
     <div class="card-body">
       You have grown dealer floor plan disbursals by <strong>₹8.7 Cr</strong>. Your peers have achieved an average growth of <strong>₹10.2 Cr</strong>.
     </div>
@@ -130,10 +154,15 @@
 
   <!-- Card 3 -->
   <div class="insight-card">
-    <div class="card-icon">
-      <svg viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+    <div class="card-header">
+      <div class="card-title">Upsell Retail Loans on New Models</div>
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+          <polyline points="16 7 22 7 22 13"></polyline>
+        </svg>
+      </div>
     </div>
-    <div class="card-title">Upsell Retail Loans on New Models</div>
     <div class="card-body">
       <strong>Honda City & Elevate</strong> launches this quarter are driving footfall. Personalise retail loan offers based on customer profiles to lift conversion by <strong>20%</strong>.
     </div>
