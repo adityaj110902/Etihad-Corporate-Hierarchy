@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Qatar Energy - Corporate Hierarchy (Interactive) - Blue Theme</title>
+    <title>PETRONAS - Corporate Hierarchy (Interactive) - Blue Theme</title>
 
     <!-- Poppins font -->
     <link
@@ -60,22 +60,19 @@
       .parent .node-sub { font-size: 14px; opacity: 0.95; }
 
       .subsidiary .node-rect { fill: var(--blue-700); stroke: var(--blue-700); }
-      .subsidiary .node-title { fill: #000; }
-      .subsidiary .node-title { font-size: 16px; }
+      .subsidiary .node-title { fill: #000; font-size: 16px; }
       .subsidiary .node-sub { font-size: 13px; opacity: 0.9; }
 
       .child .node-rect { fill: var(--bg); stroke: var(--blue-900); }
-      .child .node-title { fill: var(--blue-900); text-anchor: middle; }
-      .child .node-sub { text-anchor: middle; }
-      .child .node-title { font-size: 13px; }
-      .child .node-sub { font-size: 12px; opacity: 0.85; }
+      .child .node-title { fill: var(--blue-900); text-anchor: start; font-size: 13px; }
+      .child .node-sub { text-anchor: start; font-size: 12px; opacity: 0.85; }
 
       .connector {
         fill: none;
         stroke: #6EAAD7;
         stroke-width: 2;
       }
-      .connector.parent { stroke: #6EAAD7; }
+      .connector.trunk { stroke: #A9D2EA; }
 
       .tooltip {
         position: absolute;
@@ -87,6 +84,8 @@
         max-width: 360px;
         border: 1px solid rgba(110, 170, 215, 0.10);
         font-size: 14px;
+        pointer-events: none;
+        z-index: 5;
       }
       .tooltip h4 { margin: 0 0 6px 0; font-size: 15px; }
       .tooltip p { margin: 0; font-size: 13px; line-height: 1.3; }
@@ -106,6 +105,7 @@
         display: none;
         overflow: auto;
         border: 1px solid rgba(110, 170, 215, 0.10);
+        z-index: 10;
       }
       .sidepanel h3 { margin: 0 0 8px 0; font-size: 18px; }
       .sidepanel .close { position: absolute; right: 8px; top: 6px; cursor: pointer; }
@@ -138,9 +138,9 @@
           <div id="panel-content"></div>
         </div>
 
-        <svg id="svgRoot" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet" tabindex="0">
+        <svg id="svgRoot" viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid meet" tabindex="0">
           <defs>
-            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
               <path d="M 0 0 L 10 5 L 0 10 z" fill="#6EAAD7" />
             </marker>
           </defs>
@@ -152,7 +152,7 @@
 
     <script>
       /*************************************************************************
-       * DATA (ONLY DATA CHANGED - PETRONAS)
+       * DATA
        *************************************************************************/
       const DATA = {
         parent: {
@@ -204,7 +204,7 @@
             ],
             accounts: [],
             holdings: [
-              { id: "h2", name: "E&P Licenses & Blocks Portfolio", region: "Malaysia / International", desc: "Operated/non-operated interests, exploration licenses and development assets", link: "#" }
+              { id: "h2", name: "E&P Licenses & Blocks", region: "Malaysia / International", desc: "Operated/non-operated interests, exploration licenses and development assets", link: "#" }
             ]
           },
 
@@ -228,14 +228,30 @@
       };
 
       /*************************************************************************
-       * Layout configuration (UNCHANGED)
+       * Layout configuration
+       * Children are laid out in a dedicated column under each subsidiary,
+       * stacked vertically. Column width + trunk offset always stays inside the
+       * subsidiary's horizontal slot, so no two nodes can ever overlap.
        *************************************************************************/
       const cfg = {
-        svgW: 1200, svgH: 700, marginTop: 60, parentY: 80, subsidiaryY: 220, childStartY: 330,
-        subsidiarySpacing: 340,
-        subsidiaryBox: { w: 260, h: 84 }, parentBox: { w: 340, h: 96 }, childBox: { w: 200, h: 64 },
-        childGapX: 20, childGapY: 100,
+        svgW: 1200,
+        parentY: 50,
+        subsidiaryY: 210,
+        parentBox: { w: 340, h: 96 },
+        subsidiaryBox: { w: 280, h: 84 },
+        childBox: { w: 240, h: 62 },
+        childGapY: 26,          // vertical gap between stacked children
+        columnGutter: 60,       // minimum empty space between adjacent columns
+        trunkOffset: 34,        // distance from column left edge to the vertical trunk
+        subToChildGap: 70,      // vertical gap between a subsidiary and its first child
+        bottomPadding: 50,
       };
+
+      // Horizontal slot per subsidiary must fit: trunk + child box + gutter
+      cfg.subsidiarySpacing = Math.max(
+        cfg.subsidiaryBox.w + cfg.columnGutter,
+        cfg.childBox.w + cfg.trunkOffset + cfg.columnGutter
+      );
 
       const svg = document.getElementById("svgRoot");
       const nodesGroup = document.getElementById("nodes");
@@ -244,74 +260,104 @@
       const sidepanel = document.getElementById("sidepanel");
       const panelContent = document.getElementById("panel-content");
 
+      function collectChildren(sdata) {
+        const out = [];
+        (sdata.dealers   || []).forEach((d) => out.push({ data: d, kind: "Dealer" }));
+        (sdata.suppliers || []).forEach((d) => out.push({ data: d, kind: "Supplier" }));
+        (sdata.accounts  || []).forEach((d) => out.push({ data: d, kind: "Account" }));
+        (sdata.holdings  || []).forEach((d) => out.push({ data: d, kind: "Holding" }));
+        return out;
+      }
+
       function render() {
         nodesGroup.innerHTML = "";
         connGroup.innerHTML = "";
 
-        const centerX = cfg.svgW / 2;
-        const pX = centerX - cfg.parentBox.w / 2;
-        const pY = cfg.parentY;
-        const parentNode = { x: pX, y: pY, w: cfg.parentBox.w, h: cfg.parentBox.h, data: DATA.parent };
-
         const nSubs = DATA.subsidiaries.length;
-        const totalWidth = (nSubs - 1) * cfg.subsidiarySpacing;
-        const startX = centerX - totalWidth / 2 - cfg.subsidiaryBox.w / 2;
 
-        const subsNodes = DATA.subsidiaries.map((s, i) => ({
-          x: startX + i * cfg.subsidiarySpacing,
-          y: cfg.subsidiaryY,
-          w: cfg.subsidiaryBox.w,
-          h: cfg.subsidiaryBox.h,
-          data: s
-        }));
+        // Canvas width grows if there are more subsidiaries than the base width holds
+        const requiredW = nSubs * cfg.subsidiarySpacing + cfg.columnGutter;
+        const svgW = Math.max(cfg.svgW, requiredW);
+        const centerX = svgW / 2;
 
+        // Parent
+        const parentNode = {
+          x: centerX - cfg.parentBox.w / 2,
+          y: cfg.parentY,
+          w: cfg.parentBox.w,
+          h: cfg.parentBox.h,
+          data: DATA.parent
+        };
+
+        // Subsidiaries evenly spaced, each owning an exclusive horizontal slot
+        const totalSpan = (nSubs - 1) * cfg.subsidiarySpacing;
+        const firstCenter = centerX - totalSpan / 2;
+
+        const subsNodes = DATA.subsidiaries.map((s, i) => {
+          const cx = firstCenter + i * cfg.subsidiarySpacing;
+          return {
+            x: cx - cfg.subsidiaryBox.w / 2,
+            y: cfg.subsidiaryY,
+            w: cfg.subsidiaryBox.w,
+            h: cfg.subsidiaryBox.h,
+            cx,
+            data: s
+          };
+        });
+
+        // Parent -> subsidiary connectors
         subsNodes.forEach((sub) => {
-          const from = { x: parentNode.x + parentNode.w / 2, y: parentNode.y + parentNode.h };
-          const to = { x: sub.x + sub.w / 2, y: sub.y };
-          drawOrthogonalConnector(from, to, "connector parent");
+          drawOrthogonalConnector(
+            { x: parentNode.x + parentNode.w / 2, y: parentNode.y + parentNode.h },
+            { x: sub.cx, y: sub.y },
+            "connector"
+          );
         });
 
         drawNode(parentNode, "parent");
 
-        subsNodes.forEach((sub, si) => {
+        const childStartY = cfg.subsidiaryY + cfg.subsidiaryBox.h + cfg.subToChildGap;
+        let lowestY = childStartY;
+
+        subsNodes.forEach((sub) => {
           drawNode(sub, "subsidiary");
 
-          const childGroups = [];
-          const sdata = sub.data;
+          const children = collectChildren(sub.data);
+          if (!children.length) return;
 
-          (sdata.dealers || []).forEach((d, idx) => {
-            let x = sub.x - 200 - idx * (cfg.childBox.w + cfg.childGapX);
-            let y = cfg.childStartY + idx * (cfg.childGapY / 2) + si * 10;
-            childGroups.push({ x, y, w: cfg.childBox.w, h: cfg.childBox.h, data: d, kind: "Dealer" });
-          });
+          const colX = sub.cx - cfg.childBox.w / 2 + cfg.trunkOffset / 2; // column left edge
+          const trunkX = colX - cfg.trunkOffset;
 
-          (sdata.suppliers || []).forEach((d, idx) => {
-            const x = sub.x + sub.w + 60 + idx * (cfg.childBox.w + cfg.childGapX);
-            const y = cfg.childStartY + idx * (cfg.childGapY / 2) + si * 10;
-            childGroups.push({ x, y, w: cfg.childBox.w, h: cfg.childBox.h, data: d, kind: "Supplier" });
-          });
+          const placed = children.map((c, idx) => ({
+            x: colX,
+            y: childStartY + idx * (cfg.childBox.h + cfg.childGapY),
+            w: cfg.childBox.w,
+            h: cfg.childBox.h,
+            data: c.data,
+            kind: c.kind
+          }));
 
-          (sdata.accounts || []).forEach((d, idx) => {
-            const x = sub.x + sub.w + 90 + idx * (cfg.childBox.w + cfg.childGapX);
-            let y = cfg.childStartY + 180 + idx * (cfg.childBox.h + 20) + si * 6;
-            if (d.name && d.name.toLowerCase().includes("qatar national bank")) y += 80;
-            if (d.name && d.name.toLowerCase().includes("commercial")) y += 10;
-            childGroups.push({ x, y, w: cfg.childBox.w, h: cfg.childBox.h, data: d, kind: "Account" });
-          });
+          const lastMidY = placed[placed.length - 1].y + cfg.childBox.h / 2;
+          lowestY = Math.max(lowestY, placed[placed.length - 1].y + cfg.childBox.h);
 
-          (sdata.holdings || []).forEach((d, idx) => {
-            const x = sub.x + (sub.w - cfg.childBox.w) / 2 + idx * (cfg.childBox.w + 8);
-            let y = sub.y + sub.h + 140 + si * 6;
-            childGroups.push({ x, y, w: cfg.childBox.w, h: cfg.childBox.h, data: d, kind: "Holding" });
-          });
+          // One shared trunk: down from the subsidiary, across, then down the column
+          drawPolyline([
+            [sub.cx, sub.y + sub.h],
+            [sub.cx, sub.y + sub.h + cfg.subToChildGap / 2],
+            [trunkX, sub.y + sub.h + cfg.subToChildGap / 2],
+            [trunkX, lastMidY]
+          ], "connector trunk", false);
 
-          childGroups.forEach((c) => {
-            const from = { x: sub.x + sub.w / 2, y: sub.y + sub.h };
-            const to = { x: c.x + c.w / 2, y: c.y };
-            drawOrthogonalConnector(from, to, "connector");
+          // Short stubs from the trunk into each child's left edge
+          placed.forEach((c) => {
+            const midY = c.y + c.h / 2;
+            drawPolyline([[trunkX, midY], [c.x, midY]], "connector", true);
             drawNode(c, "child", c.kind);
           });
         });
+
+        const svgH = lowestY + cfg.bottomPadding;
+        svg.setAttribute("viewBox", `0 0 ${svgW} ${svgH}`);
       }
 
       function drawNode(nodeObj, variant, kind) {
@@ -329,23 +375,28 @@
         rect.classList.add("node-rect");
         g.appendChild(rect);
 
-        if (variant === "parent" || variant === "subsidiary" || variant === "child") g.classList.add("centered");
+        const centered = g.classList.contains("centered");
+        const titleY = centered ? y + h / 2 - 4 : y + 26;
+        const subY = centered ? y + h / 2 + 20 : y + 46;
 
         const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        title.setAttribute("x", g.classList.contains("centered") ? x + w / 2 : x + 14);
-        title.setAttribute("y", y + 34);
+        title.setAttribute("x", centered ? x + w / 2 : x + 14);
+        title.setAttribute("y", titleY);
         title.setAttribute("class", "node-title");
         title.textContent = nodeObj.data.name;
         g.appendChild(title);
 
         const subtitle = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        subtitle.setAttribute("x", g.classList.contains("centered") ? x + w / 2 : x + 14);
-        subtitle.setAttribute("y", y + 58);
+        subtitle.setAttribute("x", centered ? x + w / 2 : x + 14);
+        subtitle.setAttribute("y", subY);
         subtitle.setAttribute("class", "node-sub");
         if (variant === "parent") subtitle.textContent = nodeObj.data.type || "Parent";
         else if (variant === "subsidiary") subtitle.textContent = nodeObj.data.type || "Subsidiary";
         else subtitle.textContent = kind || "";
         g.appendChild(subtitle);
+
+        // Keep long labels inside their box
+        fitText(title, w - (centered ? 24 : 28));
 
         const overlay = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         overlay.setAttribute("x", x); overlay.setAttribute("y", y);
@@ -368,21 +419,34 @@
         nodesGroup.appendChild(g);
       }
 
-      function drawOrthogonalConnector(from, to, cls) {
-        const midY = (from.y + to.y) / 2;
-        const points = [
-          `${from.x},${from.y}`, `${from.x},${midY}`,
-          `${to.x},${midY}`, `${to.x},${to.y}`
-        ].join(" ");
+      // Shrink a label a little rather than letting it spill outside its box
+      function fitText(textEl, maxWidth) {
+        try {
+          const base = parseFloat(window.getComputedStyle(textEl).fontSize) || 14;
+          let size = base;
+          while (textEl.getComputedTextLength() > maxWidth && size > 9) {
+            size -= 0.5;
+            textEl.setAttribute("font-size", size + "px");
+          }
+        } catch (e) { /* getComputedTextLength unavailable before layout */ }
+      }
 
+      function drawPolyline(points, cls, withArrow) {
         const poly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-        poly.setAttribute("points", points);
+        poly.setAttribute("points", points.map((p) => p.join(",")).join(" "));
         poly.setAttribute("class", cls);
         poly.setAttribute("fill", "none");
         poly.setAttribute("stroke-linecap", "round");
         poly.setAttribute("stroke-linejoin", "round");
-        poly.setAttribute("marker-end", "url(#arrow)");
+        if (withArrow) poly.setAttribute("marker-end", "url(#arrow)");
         connGroup.appendChild(poly);
+      }
+
+      function drawOrthogonalConnector(from, to, cls) {
+        const midY = (from.y + to.y) / 2;
+        drawPolyline([
+          [from.x, from.y], [from.x, midY], [to.x, midY], [to.x, to.y]
+        ], cls, true);
       }
 
       function showTooltip(nodeObj, ev) {
@@ -408,13 +472,13 @@
         tooltip.setAttribute("aria-hidden", "false");
 
         const rect = document.getElementById("canvas").getBoundingClientRect();
-        let pageX, pageY;
-        if (ev.clientX && ev.clientY) { pageX = ev.clientX; pageY = ev.clientY; }
-        else { pageX = rect.left + nodeObj.x + nodeObj.w / 2; pageY = rect.top + nodeObj.y + nodeObj.h / 2; }
+        const box = ev.target.getBoundingClientRect();
+        let pageX = ev.clientX || (box.left + box.width / 2);
+        let pageY = ev.clientY || (box.top + box.height / 2);
 
         const offsetX = 14, offsetY = 10;
-        tooltip.style.left = Math.min(pageX - rect.left + offsetX, rect.width - 340) + "px";
-        tooltip.style.top = Math.min(pageY - rect.top + offsetY, rect.height - 80) + "px";
+        tooltip.style.left = Math.max(8, Math.min(pageX - rect.left + offsetX, rect.width - 360)) + "px";
+        tooltip.style.top = Math.max(8, Math.min(pageY - rect.top + offsetY, rect.height - 120)) + "px";
       }
 
       function hideTooltip() {
@@ -433,11 +497,10 @@
       }
 
       /*************************************************************************
-       * PANEL HTML (Subsidiary block updated to match screenshot format)
+       * PANEL HTML
        *************************************************************************/
       function buildPanelHtml(data, variant, kind) {
 
-        // Parent
         if (variant === "parent" || (data.type && data.type.toLowerCase().includes("parent"))) {
           let html = `<h3 style="margin-bottom:14px">${escapeHtml(data.name)}</h3>`;
           html += `<p><strong>Type:</strong> Parent</p>`;
@@ -452,7 +515,6 @@
           return html;
         }
 
-        // Subsidiary (MATCH YOUR SCREENSHOT)
         if (variant === "subsidiary" || (data.type && data.type.toLowerCase().includes("subsidiary"))) {
           let html = `<h3 style="margin-bottom:14px">${escapeHtml(data.name)}</h3>`;
 
@@ -520,14 +582,13 @@
           return html;
         }
 
-        // Child nodes
         const childKind = kind || (data.kind ? data.kind : "Entity");
         let html = `<h3 style="margin-bottom:14px">${escapeHtml(data.name)}</h3>`;
         html += `<p><strong>Type:</strong> ${escapeHtml(childKind)}</p>`;
         if (data.region) html += `<p><strong>Region:</strong> ${escapeHtml(data.region)}</p>`;
         if (data.desc) html += `<p><strong>Description:</strong> ${escapeHtml(data.desc)}</p>`;
 
-        if (data.link) {
+        if (data.link && data.link !== "#") {
           html += `<hr style="border:none;border-top:1px solid rgba(0,0,0,0.15);margin:14px 0;">`;
           html += `<p style="opacity:.85;font-size:13px;margin:0">Actions:
             <button class="link-btn" onclick="window.open('${escapeJs(data.link)}','_blank')">Open link</button>
@@ -551,6 +612,8 @@
         if (newData) Object.assign(DATA, newData);
         render();
       };
+
+      window.addEventListener("resize", () => { hideTooltip(); });
 
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") { hideTooltip(); closePanel(); }
